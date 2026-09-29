@@ -83,10 +83,10 @@ jobs:
       - name: Build signed AAB
         env:
           BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ secrets.MOTORCARE_KEYSTORE_PASSWORD }}
-          BUBBLEWRAP_KEY_PASSWORD: ${{ secrets.MOTORCARE_KEY_PASSWORD }}
+          # PKCS12 uses the keystore password for the private key.
+          BUBBLEWRAP_KEY_PASSWORD: ${{ secrets.MOTORCARE_KEYSTORE_PASSWORD }}
         run: |
           test -n "$BUBBLEWRAP_KEYSTORE_PASSWORD" || { echo "Missing MOTORCARE_KEYSTORE_PASSWORD secret"; exit 1; }
-          test -n "$BUBBLEWRAP_KEY_PASSWORD" || { echo "Missing MOTORCARE_KEY_PASSWORD secret"; exit 1; }
           bubblewrap build --manifest=twa-manifest.json --signingKeyPath=./android.keystore --signingKeyAlias=android
 
       - name: Upload AAB artifact
