@@ -47,6 +47,8 @@ jobs:
           done
           mkdir -p "$HOME/.bubblewrap"
           printf '{"jdkPath":"%s","androidSdkPath":"%s"}\n' "$JAVA_HOME" "$SDK_CLI_ROOT" > "$HOME/.bubblewrap/config.json"
+          echo "ANDROID_HOME=$SDK_CLI_ROOT" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$SDK_CLI_ROOT" >> "$GITHUB_ENV"
           cat "$HOME/.bubblewrap/config.json"
           bubblewrap doctor
 
