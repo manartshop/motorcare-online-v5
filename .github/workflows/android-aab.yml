@@ -1,0 +1,81 @@
+name: MotorCare Android AAB
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - pwa-android-release
+      - pwa-android-google-play-v1
+
+permissions:
+  contents: read
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout selected branch
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Bubblewrap
+        run: npm install -g @bubblewrap/cli
+
+      - name: Restore signing keystore
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          test -n "$ANDROID_KEYSTORE_BASE64"
+          printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android.keystore
+          test -s android.keystore
+          keytool -list -keystore android.keystore -storepass "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" >/dev/null
+
+      - name: Build signed AAB with Bubblewrap
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          test -f twa-manifest.json
+          node -e "const fs=require('fs');const p=JSON.parse(fs.readFileSync('twa-manifest.json','utf8'));p.signingKey=p.signingKey||{};p.signingKey.path='./android.keystore';p.signingKey.alias=process.env.ANDROID_KEY_ALIAS;fs.writeFileSync('twa-manifest.json',JSON.stringify(p,null,2));"
+          bubblewrap build --skipPwaValidation --signingKeyPath ./android.keystore --signingKeyAlias "$ANDROID_KEY_ALIAS" --signingKeyPassword "$ANDROID_KEYSTORE_PASSWORD"
+
+      - name: Install bundletool
+        run: |
+          curl -L -o bundletool.jar https://github.com/google/bundletool/releases/download/1.18.1/bundletool-all-1.18.1.jar
+
+      - name: Convert AAB to universal APK
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          AAB="$(find . -type f -name '*.aab' | head -n 1)"
+          test -n "$AAB"
+          java -jar bundletool.jar build-apks             --bundle="$AAB"             --output=motorcare.apks             --mode=universal             --ks=android.keystore             --ks-pass=pass:"$ANDROID_KEYSTORE_PASSWORD"             --ks-key-alias="$ANDROID_KEY_ALIAS"             --key-pass=pass:"$ANDROID_KEYSTORE_PASSWORD"
+          unzip -p motorcare.apks universal.apk > motorcare-universal.apk
+          test -s motorcare-universal.apk
+
+      - name: Upload AAB and APK artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: motorcare-android-release
+          path: |
+            **/*.aab
+            motorcare-universal.apk
+            motorcare.apks
+            twa-manifest.json
+          if-no-files-found: error
