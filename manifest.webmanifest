@@ -1,10 +1,10 @@
 {
-  "name": "MotorCare Online V5",
-  "short_name": "MotorCare",
+  "name": "Bengkel Buyung",
+  "short_name": "Bengkel Buyung",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#0b1220",
   "theme_color": "#0b1220",
-  "description": "Bantuan motor di jalan — Customer dan Mechanic"
+  "description": "Bengkel Buyung — Bantuan motor di jalan"
 }
