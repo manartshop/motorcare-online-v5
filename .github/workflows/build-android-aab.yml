@@ -63,6 +63,23 @@ jobs:
       - name: Generate TWA Android project
         run: bubblewrap update --skipVersionUpgrade --manifest=twa-manifest.json
 
+      - name: Verify signing secrets
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.MOTORCARE_KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.MOTORCARE_KEY_PASSWORD }}
+        run: |
+          if keytool -list -keystore android.keystore -storepass "$KEYSTORE_PASSWORD" -alias android >/dev/null 2>&1; then
+            echo "MOTORCARE_KEYSTORE_PASSWORD matches the keystore."
+          else
+            echo "MOTORCARE_KEYSTORE_PASSWORD does NOT match the keystore."
+            if keytool -list -keystore android.keystore -storepass "$KEY_PASSWORD" -alias android >/dev/null 2>&1; then
+              echo "MOTORCARE_KEY_PASSWORD matches the keystore instead."
+            else
+              echo "Neither signing secret matches the keystore."
+            fi
+            exit 1
+          fi
+
       - name: Build signed AAB
         env:
           BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ secrets.MOTORCARE_KEYSTORE_PASSWORD }}
