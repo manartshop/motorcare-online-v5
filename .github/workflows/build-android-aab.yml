@@ -1,0 +1,63 @@
+name: Build MotorCare Android AAB
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  build-aab:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Bubblewrap
+        run: npm install -g @bubblewrap/cli
+      - name: Prepare signing keystore
+        env:
+          KEYSTORE_B64: ${{ secrets.MOTORCARE_KEYSTORE_B64 }}
+        run: |
+          test -n "$KEYSTORE_B64" || { echo "Missing MOTORCARE_KEYSTORE_B64 secret"; exit 1; }
+          echo "$KEYSTORE_B64" | base64 --decode > android.keystore
+          test -s android.keystore
+      - name: Generate TWA Android project
+        run: bubblewrap update --manifest=twa-manifest.json
+      - name: Build signed AAB
+        env:
+          BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ secrets.MOTORCARE_KEYSTORE_PASSWORD }}
+          BUBBLEWRAP_KEY_PASSWORD: ${{ secrets.MOTORCARE_KEY_PASSWORD }}
+        run: |
+          test -n "$BUBBLEWRAP_KEYSTORE_PASSWORD" || { echo "Missing MOTORCARE_KEYSTORE_PASSWORD secret"; exit 1; }
+          test -n "$BUBBLEWRAP_KEY_PASSWORD" || { echo "Missing MOTORCARE_KEY_PASSWORD secret"; exit 1; }
+          bubblewrap build --manifest=twa-manifest.json --signingKeyPath=./android.keystore --signingKeyAlias=android
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: motorcare-online-aab
+          path: app-release-bundle.aab
+          if-no-files-found: error
+      - name: Generate Digital Asset Links
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.MOTORCARE_KEYSTORE_PASSWORD }}
+        run: |
+          SHA256=$(keytool -list -v -keystore android.keystore -storepass "$KEYSTORE_PASSWORD" -alias android | awk -F': ' '/SHA256:/{print $2; exit}')
+          test -n "$SHA256" || { echo "Could not read SHA-256 certificate fingerprint"; exit 1; }
+          mkdir -p .well-known
+          printf '[{"relation":["delegate_permission/common.handle_all_urls"],"target":{"namespace":"android_app","package_name":"com.manartshop.motorcarev5","sha256_cert_fingerprints":["%s"]}}]\n' "$SHA256" > .well-known/assetlinks.json
+      - name: Commit Digital Asset Links
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .well-known/assetlinks.json
+          git diff --cached --quiet || git commit -m "chore: update Android Digital Asset Links"
+          git push
+      - name: Remove sensitive files
+        if: always()
+        run: rm -f android.keystore
