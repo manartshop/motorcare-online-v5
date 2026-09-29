@@ -1,0 +1,53 @@
+{
+  "packageId": "com.manartshop.motorcarev5",
+  "host": "manartshop.github.io",
+  "name": "MotorCare Online",
+  "launcherName": "MotorCare",
+  "display": "standalone",
+  "themeColor": "#0b1220",
+  "themeColorDark": "#0b1220",
+  "navigationColor": "#0b1220",
+  "navigationColorDark": "#0b1220",
+  "navigationDividerColor": "#0b1220",
+  "navigationDividerColorDark": "#0b1220",
+  "backgroundColor": "#0b1220",
+  "enableNotifications": true,
+  "startUrl": "/motorcare-online-v5/",
+  "iconUrl": "https://manartshop.github.io/motorcare-online-v5/icon-512.svg",
+  "maskableIconUrl": "https://manartshop.github.io/motorcare-online-v5/icon-512.svg",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "./android.keystore",
+    "alias": "android"
+  },
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://manartshop.github.io/motorcare-online-v5/manifest.webmanifest",
+  "fallbackType": "customtabs",
+  "features": {
+    "locationDelegation": {
+      "enabled": true
+    }
+  },
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://manartshop.github.io/motorcare-online-v5/",
+  "minSdkVersion": 23,
+  "orientation": "portrait",
+  "fingerprints": [],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "protocolHandlers": [],
+  "fileHandlers": [],
+  "launchHandlerClientMode": "",
+  "displayOverride": [
+    "standalone"
+  ],
+  "appVersion": "1.0.0"
+}
