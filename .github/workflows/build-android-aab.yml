@@ -39,8 +39,14 @@ jobs:
 
       - name: Configure Bubblewrap environment
         run: |
+          SDK_CLI_ROOT="$(dirname "$(dirname "$(command -v sdkmanager)")")"
+          for d in build-tools platforms platform-tools licenses; do
+            if [ ! -e "$SDK_CLI_ROOT/$d" ]; then
+              ln -s "$ANDROID_HOME/$d" "$SDK_CLI_ROOT/$d"
+            fi
+          done
           mkdir -p "$HOME/.bubblewrap"
-          printf '{"jdkPath":"%s","androidSdkPath":"%s"}\n' "$JAVA_HOME" "$ANDROID_HOME" > "$HOME/.bubblewrap/config.json"
+          printf '{"jdkPath":"%s","androidSdkPath":"%s"}\n' "$JAVA_HOME" "$SDK_CLI_ROOT" > "$HOME/.bubblewrap/config.json"
           cat "$HOME/.bubblewrap/config.json"
           bubblewrap doctor
 
