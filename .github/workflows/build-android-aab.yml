@@ -89,11 +89,32 @@ jobs:
           test -n "$BUBBLEWRAP_KEYSTORE_PASSWORD" || { echo "Missing MOTORCARE_KEYSTORE_PASSWORD secret"; exit 1; }
           bubblewrap build --manifest=twa-manifest.json --signingKeyPath=./android.keystore --signingKeyAlias=android
 
-      - name: Upload AAB artifact
+      - name: Verify AAB
+        run: |
+          test -s app-release-bundle.aab
+          ls -lh app-release-bundle.aab
+
+      - name: Install bundletool
+        run: |
+          curl -L --fail -o bundletool.jar https://github.com/google/bundletool/releases/download/1.18.1/bundletool-all-1.18.1.jar
+          test -s bundletool.jar
+
+      - name: Convert signed AAB to universal APK
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.MOTORCARE_KEYSTORE_PASSWORD }}
+        run: |
+          java -jar bundletool.jar build-apks             --bundle=app-release-bundle.aab             --output=motorcare.apks             --mode=universal             --ks=android.keystore             --ks-pass=pass:"$KEYSTORE_PASSWORD"             --ks-key-alias=android             --key-pass=pass:"$KEYSTORE_PASSWORD"
+          unzip -p motorcare.apks universal.apk > motorcare-universal.apk
+          test -s motorcare-universal.apk
+          ls -lh motorcare-universal.apk
+
+      - name: Upload AAB and universal APK
         uses: actions/upload-artifact@v4
         with:
-          name: motorcare-online-aab
-          path: app-release-bundle.aab
+          name: motorcare-android-release
+          path: |
+            app-release-bundle.aab
+            motorcare-universal.apk
           if-no-files-found: error
 
       - name: Generate Digital Asset Links
@@ -115,4 +136,4 @@ jobs:
 
       - name: Remove sensitive files
         if: always()
-        run: rm -f android.keystore
+        run: rm -f android.keystore bundletool.jar
