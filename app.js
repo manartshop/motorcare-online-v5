@@ -39,7 +39,7 @@ async function setDispatchMode(v){try{
 await api("/rest/v1/rpc/set_mechanic_dispatch_mode",{method:"POST",body:JSON.stringify({p_mode:v})});
 mechanicDispatchMode=v;
 if($("mechanicModeStatus"))$("mechanicModeStatus").textContent=v==="auto_accept"?"AUTO • Order langsung diterima":"TERDEKAT • Hanya customer dalam radius";
-msg("dispatchMsg",v==="auto_accept"?"Mode AUTO aktif: order terdekat yang cocok akan diterima otomatis.":"Mode TERDEKAT aktif: order hanya masuk bila customer berada dalam radius layanan.",true);
+if($("mechanicModeStatus")){$("mechanicModeStatus").textContent=v==="auto_accept"?"AUTO • Order terdekat yang cocok akan diterima otomatis.":"TERDEKAT • Order hanya masuk bila customer berada dalam radius layanan.";$("mechanicModeStatus").className="msg ok";}
 }catch(e){msg("dispatchMsg",e.message)}}
 
 async function loadMechanicNotifications(){try{
