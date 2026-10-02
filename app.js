@@ -68,7 +68,6 @@ const ids=[...new Set(d.map(x=>x.order_id).filter(Boolean))];
 let orders=[];
 if(ids.length) orders=await api("/rest/v1/orders?id=in.("+ids.join(",")+")&select=id,order_code,customer_email,customer_name,status");
 const om={};orders.forEach(o=>om[o.id]=o);
-const pending=d.filter(x=>x.accepted===null);
 const box=$("offers");
 box.innerHTML=d.length?d.map(o=>{
 const ord=om[o.order_id]||{};
@@ -76,8 +75,11 @@ const code=ord.order_code||("MC-"+String(o.order_id).slice(0,8).toUpperCase());
 const customer=ord.customer_email||ord.customer_name||"Customer";
 const dist=o.distance_m!=null?Math.round(Number(o.distance_m))+" m":"jarak tidak tersedia";
 const status=o.accepted===true?"accepted":o.accepted===false?"rejected":"ORDER MASUK";
-return '<div class="item '+(o.accepted===null?"incoming-order":"")+'"><b>🚨 '+status+'</b><br>🧾 '+code+'<br>👤 Customer Email: '+customer+'<br>📍 Jarak customer: '+dist+(o.accepted===null?'<div class="actions"><button onclick="respond(\\''+o.id+'\\',true)">Terima Order</button><button class="secondary" onclick="respond(\\''+o.id+'\\',false)">Tolak</button></div>':"")+'</div>'
+return '<div class="item '+(o.accepted===null?"incoming-order":"")+'"><b>🚨 '+status+'</b><br>🧾 '+code+'<br>👤 Customer Email: '+customer+'<br>📍 Jarak customer: '+dist+(o.accepted===null?'<div class="actions"><button class="offer-accept" data-assignment="'+o.id+'">Terima Order</button><button class="secondary offer-reject" data-assignment="'+o.id+'">Tolak</button></div>':"")+'</div>';
 }).join(""):"Belum ada order masuk.";
+box.querySelectorAll(".offer-accept").forEach(b=>b.addEventListener("click",()=>respond(b.dataset.assignment,true)));
+box.querySelectorAll(".offer-reject").forEach(b=>b.addEventListener("click",()=>respond(b.dataset.assignment,false)));
+const pending=d.filter(x=>x.accepted===null);
 if(pending.length) document.title="🚨 Order masuk • MotorCare"; else document.title="MotorCare Online";
 }catch(e){$("offers").textContent=e.message}}async function respond(id,accept){try{await api("/rest/v1/rpc/mechanic_respond_assignment",{method:"POST",body:JSON.stringify({p_assignment_id:id,p_accept:accept})});await loadOffers();await loadMechanicOrders()}catch(e){alert(e.message)}}
 async function loadMechanicOrders(){try{const d=await api("/rest/v1/orders?assigned_mechanic_id=eq."+user.id+"&select=*&order=created_at.desc");const labels={assigned:"Ditugaskan",on_the_way:"Menuju lokasi",arrived:"Sudah tiba",in_progress:"Sedang dikerjakan",completed:"Selesai"};const box=$("mechanicOrders");box.innerHTML=d.length?d.map(o=>'<div class="item"><b>🧾 '+(o.order_code||("MC-"+String(o.id).slice(0,8).toUpperCase()))+"</b><br>👤 Customer Email: "+(o.customer_email||o.customer_name||"Customer")+"<br>Status: "+(labels[o.status]||o.status)+'<div class="actions">'+[["on_the_way","Menuju lokasi"],["arrived","Sudah tiba"],["in_progress","Mulai pekerjaan"],["completed","Selesai"]].map(x=>'<button class="status-btn" data-order="'+o.id+'" data-status="'+x[0]+'">'+x[1]+"</button>").join("")+"</div></div>").join(""):"Belum ada order aktif.";box.querySelectorAll(".status-btn").forEach(b=>b.addEventListener("click",()=>statusOrder(b.dataset.order,b.dataset.status)))}catch(e){$("mechanicOrders").textContent=e.message}}
