@@ -19,3 +19,41 @@ body{margin:0;background:#f2f2f2;color:#111;font-family:Inter,system-ui,-apple-s
 @media(max-width:480px){.app{width:100%}.welcome-banner{margin-left:58px;margin-right:58px}.service-tiles{margin-left:63px;margin-right:63px}.quick-list{margin-left:98px;margin-right:98px}.promo-card{margin-left:63px;margin-right:63px}}
 
 .profile-actions{margin-top:24px;padding-top:18px;border-top:1px solid #e5e5e5}.logout-btn{width:100%;min-height:50px!important;border-radius:14px!important;background:#111!important;color:#fff!important;border:0!important;display:block!important;font-size:16px!important;font-weight:700!important;box-shadow:none!important}
+
+
+/* MOTORCARE V5 — NEON GREEN + BLACK THEME */
+:root{--mc-neon:#39ff14;--mc-neon-dark:#20c20e;--mc-black:#050505;--mc-panel:#101010;--mc-soft:#e9ffe5;--mc-muted:#737373;--mc-border:#202020}
+html,body{background:var(--mc-black)!important;color:#111}
+.app{background:#fff;color:#111}
+.mc-topbar{background:var(--mc-black)!important;color:#fff}
+.mc-topbar:before,.mc-topbar:after{background:rgba(57,255,20,.18)!important}
+.mc-topbar #net{background:var(--mc-neon)!important;color:#050505!important;font-weight:800}
+.mc-search{background:#171717!important;color:#fff!important;border:1px solid #2a2a2a}
+.mc-more{background:var(--mc-neon)!important;color:#050505!important;font-weight:900}
+.auth-card,.card,.page-card,.booking-sheet{border-color:#1c1c1c}
+button,.cta{background:var(--mc-neon)!important;color:#050505!important;border-color:var(--mc-neon)!important;font-weight:800}
+button:hover,.cta:hover{background:#63ff48!important}
+button.secondary,.logout-btn{background:var(--mc-black)!important;color:var(--mc-neon)!important;border:2px solid var(--mc-neon)!important}
+input,select{border-color:#222!important;background:#fff!important;color:#111!important}
+input:focus,select:focus{outline:2px solid var(--mc-neon)!important;outline-offset:1px}
+.pill{background:var(--mc-neon)!important;color:#050505!important;font-weight:800}
+.customer-notice{background:var(--mc-soft)!important;border-left-color:var(--mc-neon)!important}
+.welcome-banner{border-color:var(--mc-black)!important;color:#111!important}.welcome-banner b{color:#159b08!important}
+.service-tiles{border:2px solid #111}.service-tile{background:#fff}.tile-icon{background:var(--mc-black)!important;color:var(--mc-neon)!important;border:3px solid var(--mc-neon)}
+.quick-list{border-color:var(--mc-black)}.quick-list button{border-bottom-color:var(--mc-black)}
+.promo-card{background:linear-gradient(145deg,var(--mc-black) 0 58%,#183d13 58% 100%)!important;border-color:var(--mc-neon)!important}.promo-card small{color:#111!important}
+.section-title{color:#111}
+.bottom-nav{background:var(--mc-black)!important;box-shadow:0 -5px 20px rgba(0,0,0,.35)}
+.bottom-nav button{color:#fff!important}.bottom-nav button.active span:first-child{color:var(--mc-neon)!important;text-shadow:0 0 8px rgba(57,255,20,.45)}
+.bottom-nav i{background:var(--mc-neon)!important;color:#050505!important}
+.ride-map-card{border-top:3px solid var(--mc-neon)}
+.mechanic-pin{background:var(--mc-neon)!important;color:#050505}
+.map-back{background:var(--mc-black)!important;color:var(--mc-neon)!important;border:2px solid var(--mc-neon)!important}
+.sheet-title .pill{background:var(--mc-neon)!important}
+.badge{background:var(--mc-neon)!important;color:#050505!important}
+.item,.mechanic-card,.track-step,.payment-box{border-color:#222!important}
+.notification-new,.incoming-order{border-left:4px solid var(--mc-neon)!important;background:#f4fff1!important}
+.actions button{background:var(--mc-neon)!important;color:#050505!important}
+.msg.ok{border-color:var(--mc-neon)!important;background:#efffeb!important;color:#116b08!important}
+.profile-actions{border-top-color:#222!important}
+@media(max-width:480px){html,body{background:#fff}.app{box-shadow:none}}
