@@ -79,4 +79,4 @@ function updateTrack(){const orders=Object.values(window.__mcOrders||{});const a
 function updateCustomerProfile(){const p=window.profile||null;document.getElementById('profileContent').innerHTML='<b>Akun Customer</b><br>'+((window.user&&window.user.email)||'')+'<br><span class="muted">ID: '+((window.user&&window.user.id)||'-')+'</span>'}
 function updatePaymentsMirror(){const orders=Object.values(window.__mcOrders||{});document.getElementById('paymentsMirror').innerHTML=orders.length?orders.map(o=>'<div class="item"><b>Order #'+String(o.id).slice(0,8)+'</b><br>Status pembayaran: '+(o.payment_status||'unpaid')+'<br>Rp '+Number(o.final_price??o.total_amount??0).toLocaleString('id-ID')+'</div>').join(''):'Belum ada transaksi.';}
 </script>
-<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js?v=13",{scope:"./"}).catch(()=>{});}</script><script src="app.js?v=13"></script></body></html>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js?v=15",{scope:"./"}).catch(()=>{});}</script><script src="app.js?v=15"></script></body></html>
