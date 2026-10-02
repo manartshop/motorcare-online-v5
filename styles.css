@@ -57,10 +57,3 @@ input:focus,select:focus{outline:2px solid var(--mc-neon)!important;outline-offs
 .msg.ok{border-color:var(--mc-neon)!important;background:#efffeb!important;color:#116b08!important}
 .profile-actions{border-top-color:#222!important}
 @media(max-width:480px){html,body{background:#fff}.app{box-shadow:none}}
-
-/* Customer menu interaction */
-.customer-menu[aria-hidden="false"]{display:grid;position:absolute;z-index:100;top:138px;left:12px;right:12px;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:12px;background:var(--mc-black,#050505);border:2px solid var(--mc-neon,#39ff14);border-radius:16px;box-shadow:0 12px 30px rgba(0,0,0,.55)}
-.customer-menu[aria-hidden="false"] button{background:#111;color:#fff;border:1px solid #252525;border-radius:10px;padding:12px;font-weight:800;cursor:pointer}
-.customer-menu[aria-hidden="false"] button.active{background:var(--mc-neon,#39ff14);color:#050505}
-.mc-more{cursor:pointer!important;pointer-events:auto!important}
-.bottom-nav button{cursor:pointer!important;pointer-events:auto!important}
