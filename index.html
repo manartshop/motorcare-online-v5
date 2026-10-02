@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b1220">
+<meta name="theme-color" content="#ffc629">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -13,70 +13,84 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.svg">
-<style>
-.customer-menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}.customer-menu button{min-height:58px;text-align:left;padding:10px 12px}.customer-menu .active{outline:2px solid currentColor}.customer-panel[hidden]{display:none}.customer-panel .card{margin-top:10px}.menu-icon{font-size:21px;margin-right:7px}.menu-title{font-weight:700}.menu-sub{display:block;font-size:11px;opacity:.7;margin-top:3px}.customer-placeholder{padding:14px;border-radius:12px;background:rgba(127,127,127,.08)}.mechanic-card{display:grid;grid-template-columns:84px 1fr;gap:12px;align-items:center}.mechanic-photo{width:84px;height:84px;border-radius:50%;object-fit:cover;background:rgba(127,127,127,.12)}.track-status{display:grid;gap:8px;margin-top:12px}.track-step{padding:10px 12px;border-radius:10px;background:rgba(127,127,127,.08)}.track-step.done{outline:2px solid currentColor}.track-step.current{font-weight:700}.track-location{margin-top:12px;padding:12px;border-radius:10px;background:rgba(127,127,127,.08)}.mechanic-card{display:grid;grid-template-columns:84px 1fr;gap:12px;align-items:center}.mechanic-photo{width:84px;height:84px;border-radius:50%;object-fit:cover;background:rgba(127,127,127,.12)}.track-status{display:grid;gap:8px;margin-top:12px}.track-step{padding:10px 12px;border-radius:10px;background:rgba(127,127,127,.08)}.track-step.done{outline:2px solid currentColor}.track-step.current{font-weight:700}.track-location{margin-top:12px;padding:12px;border-radius:10px;background:rgba(127,127,127,.08)}.mechanic-mode{display:grid;grid-template-columns:1fr 1fr;gap:10px}.mechanic-mode select{width:100%}.incoming-order{border:2px solid currentColor;animation:mcPulse 1.4s infinite}.notification-new{border-left:4px solid currentColor}@keyframes mcPulse{50%{transform:scale(1.01)}}.badge{display:inline-block;min-width:22px;padding:3px 7px;border-radius:999px;background:#d22;color:#fff;text-align:center;font-size:12px}@media(min-width:700px){.customer-menu{grid-template-columns:repeat(3,minmax(0,1fr))}}
-</style>
 </head>
-<body><main class="app"><header><div><div class="brand">MotorCare Online</div><div class="sub">Bantuan motor di jalan</div></div><span id="net" class="pill">OFFLINE</span></header>
-<section id="auth" class="card"><h2>Masuk</h2><p class="muted">Gunakan akun Customer atau Mechanic.</p><input id="email" type="email" placeholder="Email"><input id="password" type="password" placeholder="Password"><div class="row"><button id="login">Masuk</button><button id="signup" class="secondary">Daftar</button></div><div id="authMsg" class="msg"></div></section>
-<section id="dashboard" hidden><div class="card welcome"><div><div class="muted">Akun</div><strong id="who"></strong><span id="role" class="pill"></span></div><button id="logout" class="secondary small">Keluar</button></div>
+<body>
+<main class="app">
+<header class="mc-topbar">
+  <div class="mc-top-copy"><div class="brand">MotorCare</div><div class="sub">Bantuan motor di jalan</div></div>
+  <span id="net" class="pill">OFFLINE</span>
+  <div class="mc-search"><span>⌕</span><span>Sedang ingin mencari apa?</span></div>
+  <button class="mc-more" type="button" aria-label="Menu">•••</button>
+</header>
+<section id="auth" class="card auth-card">
+  <h2>Masuk</h2><p class="muted">Gunakan akun Customer atau Mechanic.</p>
+  <input id="email" type="email" placeholder="Email"><input id="password" type="password" placeholder="Password">
+  <div class="row"><button id="login">Masuk</button><button id="signup" class="secondary">Daftar</button></div><div id="authMsg" class="msg"></div>
+</section>
+<section id="dashboard" hidden>
+<div class="card welcome"><div><div class="muted">Akun</div><strong id="who"></strong><span id="role" class="pill"></span></div><button id="logout" class="secondary small">Keluar</button></div>
 <div id="customer" hidden>
-  <div class="card"><h2>Menu Customer</h2><div class="customer-menu" id="customerMenu">
-    <button data-panel="home" class="active"><span class="menu-icon">🏠</span><span class="menu-title">Beranda</span><span class="menu-sub">Ringkasan MotorCare</span></button>
-    <button data-panel="service"><span class="menu-icon">🔧</span><span class="menu-title">Pesan Servis</span><span class="menu-sub">Cari mekanik sekarang</span></button>
-    <button data-panel="ordersPanel"><span class="menu-icon">📋</span><span class="menu-title">Pesanan Saya</span><span class="menu-sub">Lihat order saya</span></button>
-    <button data-panel="track"><span class="menu-icon">📍</span><span class="menu-title">Lacak Mekanik</span><span class="menu-sub">Pantau status mekanik</span></button>
-    <button data-panel="chat"><span class="menu-icon">💬</span><span class="menu-title">Chat dengan Mekanik</span><span class="menu-sub">Komunikasi dengan mekanik</span></button>
-    <button data-panel="payment"><span class="menu-icon">💰</span><span class="menu-title">Pembayaran</span><span class="menu-sub">Tagihan & transaksi</span></button>
-    <button data-panel="history"><span class="menu-icon">⭐</span><span class="menu-title">Riwayat & Penilaian</span><span class="menu-sub">Riwayat servis & rating</span></button>
-    <button data-panel="profile"><span class="menu-icon">👤</span><span class="menu-title">Profil Saya</span><span class="menu-sub">Data akun customer</span></button>
-    <button data-panel="notifications"><span class="menu-icon">🔔</span><span class="menu-title">Notifikasi</span><span class="menu-sub">Pemberitahuan order</span></button>
-    <button data-panel="settings"><span class="menu-icon">⚙️</span><span class="menu-title">Pengaturan</span><span class="menu-sub">Preferensi aplikasi</span></button>
-    <button data-panel="help"><span class="menu-icon">📞</span><span class="menu-title">Bantuan</span><span class="menu-sub">Hubungi MotorCare</span></button>
-  </div></div>
-  <div id="customerNotice" class="card notification-new" hidden></div><div id="customerPanels">
-    <div id="panel-home" class="customer-panel"><div class="card"><h2>🏠 Beranda</h2><p class="muted">Selamat datang di MotorCare Online. Pilih menu untuk melanjutkan.</p><div class="customer-placeholder">Gunakan <b>Pesan Servis</b> untuk mencari mekanik atau <b>Pesanan Saya</b> untuk melihat order Anda.</div></div></div>
-    <div id="panel-service" class="customer-panel" hidden><div class="card"><h2>🔧 Pesan Servis</h2><select id="service"><option value="">Memuat layanan…</option></select><input id="problem" placeholder="Keluhan motor (contoh: ban bocor)"><button id="gpsCustomer">Ambil lokasi saya</button><div id="gpsC" class="muted"></div><button id="order">Cari mekanik sekarang</button><div id="orderMsg" class="msg"></div></div></div>
-    <div id="panel-ordersPanel" class="customer-panel" hidden><div class="card"><h2>📋 Pesanan Saya</h2><div id="orders"></div></div></div>
-    <div id="panel-track" class="customer-panel" hidden><div class="card"><h2>📍 Lacak Mekanik</h2><div id="trackContent" class="customer-placeholder">Memuat status order aktif…</div></div></div>
-    <div id="panel-chat" class="customer-panel" hidden><div class="card"><h2>💬 Chat dengan Mekanik</h2><div class="customer-placeholder">Fitur chat akan dihubungkan ke mekanik yang menerima order Anda. Struktur menu sudah disiapkan.</div></div></div>
-    <div id="panel-payment" class="customer-panel" hidden><div class="card"><h2>💰 Pembayaran</h2><p class="muted">Pilih metode pembayaran pada pesanan Anda.</p><div id="paymentsMirror"></div></div></div>
-    <div id="panel-history" class="customer-panel" hidden><div class="card"><h2>⭐ Riwayat & Penilaian</h2><div id="historyContent" class="customer-placeholder">Riwayat servis dan penilaian akan ditampilkan di sini.</div></div></div>
-    <div id="panel-profile" class="customer-panel" hidden><div class="card"><h2>👤 Profil Saya</h2><div id="profileContent" class="customer-placeholder">Memuat profil…</div></div></div>
-    <div id="panel-notifications" class="customer-panel" hidden><div class="card"><h2>🔔 Notifikasi <span id="customerNotificationBadge" class="badge">0</span></h2><div class="customer-placeholder">Notifikasi status mekanik diperbarui otomatis setiap beberapa detik.</div><div id="customerNotificationMsg" class="msg"></div><div id="customerNotifications"></div></div></div>
-    <div id="panel-settings" class="customer-panel" hidden><div class="card"><h2>⚙️ Pengaturan</h2><div class="customer-placeholder">Pengaturan akun dan preferensi aplikasi akan tersedia di sini.</div></div></div>
-    <div id="panel-help" class="customer-panel" hidden><div class="card"><h2>📞 Bantuan</h2><div class="customer-placeholder">Pusat bantuan MotorCare. Kontak bantuan akan dihubungkan pada tahap berikutnya.</div></div></div>
+  <div class="customer-menu" id="customerMenu" aria-hidden="true">
+    <button data-panel="home" class="active">Home</button><button data-panel="service">Servis</button><button data-panel="ordersPanel">Pesanan</button><button data-panel="track">Lacak</button><button data-panel="chat">Chat</button><button data-panel="payment">Bayar</button><button data-panel="history">Riwayat</button><button data-panel="profile">Profile</button><button data-panel="notifications">Notifikasi</button><button data-panel="settings">Pengaturan</button><button data-panel="help">Bantuan</button>
   </div>
-</div>
-<div id="admin" hidden><div class="card"><h2>Admin • Pembayaran</h2><p class="muted">Konfirmasi pembayaran manual untuk pengujian Payment V1.</p><div id="adminPayments"></div></div><div class="card"><h2>Admin • Reset Mechanic Test</h2><p class="muted">Reset khusus akun mechanic.test@motorcare.local. Hanya admin aktif yang dapat menjalankan.</p><input id="resetMechanicPassword" type="password" minlength="8" placeholder="Password baru (min. 8 karakter)"><button id="resetMechanic">Reset password mechanic test</button><div id="resetMechanicMsg" class="msg"></div></div></div>
-<div id="mechanic" hidden>
-  <div class="card">
-    <h2>🏍️ Mode Kerja Mekanik</h2>
-    <p class="muted">Pilih cara MotorCare mengirim order seperti alur aplikasi ojek online.</p>
-    <div class="mechanic-mode">
-      <div><label><b>Mode order</b></label><select id="dispatchMode"><option value="nearby_only">📍 Customer Terdekat</option><option value="auto_accept">⚡ Otomatis Terima</option></select></div>
-      <div><label><b>Radius layanan</b></label><div id="mechanicRadius" class="customer-placeholder">-</div></div>
+  <div id="customerNotice" class="customer-notice" hidden></div>
+  <div id="customerPanels">
+    <div id="panel-home" class="customer-panel">
+      <div class="welcome-banner">Selamat datang <b id="customerWelcomeName">di MotorCare</b></div>
+      <section class="service-tiles">
+        <button class="service-tile primary" type="button" data-open-panel="service"><span class="tile-icon">🏍️</span><b>MotorCare Servis</b><small>Pesan mekanik</small></button>
+        <button class="service-tile" type="button" data-open-panel="track"><span class="tile-icon">📍</span><b>Lacak Mekanik</b><small>Posisi & status</small></button>
+        <button class="service-tile" type="button" data-open-panel="ordersPanel"><span class="tile-icon">🧾</span><b>Pesanan Saya</b><small>Order & pembayaran</small></button>
+      </section>
+      <h2 class="section-title">Akses Cepat</h2>
+      <div class="quick-list">
+        <button type="button" data-open-panel="service"><span>📍</span><span><b>Lokasi servis</b><small>Gunakan lokasi GPS saya</small></span><strong>›</strong></button>
+        <button type="button" data-open-panel="history"><span>⭐</span><span><b>Riwayat servis</b><small>Lihat servis sebelumnya</small></span><strong>›</strong></button>
+      </div>
+      <div class="promo-card"><div><b>MotorCare Emergency</b><strong>Butuh mekanik sekarang?</strong><small>Pesan mekanik terdekat dan pantau perjalanannya.</small></div><span>🔧</span></div>
     </div>
-    <div id="mechanicModeStatus" class="msg"></div>
-    <div class="row"><button id="online">🟢 ONLINE</button><button id="offline" class="secondary">⚪ OFFLINE</button></div>
-    <button id="gpsMechanic">📍 Perbarui lokasi saya</button>
-    <div id="gpsM" class="muted"></div>
+    <div id="panel-service" class="customer-panel" hidden>
+      <div class="ride-map-card"><div class="fake-map"><span class="road r1"></span><span class="road r2"></span><span class="road r3"></span><span class="map-pin customer-pin">●</span><span class="map-pin mechanic-pin">🔧</span><span class="route-dot d1"></span><span class="route-dot d2"></span><span class="route-dot d3"></span></div><button class="map-back" type="button" data-open-panel="home">‹</button></div>
+      <div class="booking-sheet">
+        <div class="sheet-handle"></div><div class="sheet-title"><div><b>Pesan Mekanik</b><small>MotorCare • mekanik online</small></div><span class="pill">GPS</span></div>
+        <select id="service"><option value="">Memuat layanan…</option></select>
+        <input id="problem" placeholder="Keluhan motor (contoh: ban bocor)">
+        <button id="gpsCustomer" class="secondary">📍 Ambil lokasi saya</button><div id="gpsC" class="muted"></div>
+        <button id="order" class="cta">Cari mekanik sekarang</button><div id="orderMsg" class="msg"></div>
+      </div>
+    </div>
+    <div id="panel-ordersPanel" class="customer-panel" hidden><div class="page-card"><div class="page-head"><button type="button" data-open-panel="home">‹</button><h2>Pesanan</h2></div><div id="orders"></div></div></div>
+    <div id="panel-track" class="customer-panel" hidden><div class="ride-map-card"><div class="fake-map"><span class="road r1"></span><span class="road r2"></span><span class="road r3"></span><span class="map-pin customer-pin">●</span><span class="map-pin mechanic-pin">🔧</span><span class="route-dot d1"></span><span class="route-dot d2"></span><span class="route-dot d3"></span></div><button class="map-back" type="button" data-open-panel="home">‹</button></div><div class="page-card tracking-sheet"><h2>Mekanik menuju lokasi</h2><div id="trackContent" class="customer-placeholder">Memuat status order aktif…</div></div></div>
+    <div id="panel-chat" class="customer-panel" hidden><div class="page-card"><div class="page-head"><button type="button" data-open-panel="home">‹</button><h2>Chat</h2></div><div class="customer-placeholder">Chat dengan mekanik yang menerima order Anda.</div></div></div>
+    <div id="panel-payment" class="customer-panel" hidden><div class="page-card"><div class="page-head"><button type="button" data-open-panel="home">‹</button><h2>Pembayaran</h2></div><div id="paymentsMirror"></div></div></div>
+    <div id="panel-history" class="customer-panel" hidden><div class="page-card"><div class="page-head"><button type="button" data-open-panel="home">‹</button><h2>Riwayat</h2></div><div id="historyContent" class="customer-placeholder">Riwayat servis dan penilaian akan ditampilkan di sini.</div></div></div>
+    <div id="panel-profile" class="customer-panel" hidden><div class="page-card"><div class="page-head"><button type="button" data-open-panel="home">‹</button><h2>Profile</h2></div><div id="profileContent" class="customer-placeholder">Memuat profil…</div></div></div>
+    <div id="panel-notifications" class="customer-panel" hidden><div class="page-card"><div class="page-head"><button type="button" data-open-panel="home">‹</button><h2>Notifikasi <span id="customerNotificationBadge" class="badge">0</span></h2></div><div id="customerNotificationMsg" class="msg"></div><div id="customerNotifications"></div></div></div>
+    <div id="panel-settings" class="customer-panel" hidden><div class="page-card"><div class="page-head"><button type="button" data-open-panel="home">‹</button><h2>Pengaturan</h2></div><div class="customer-placeholder">Pengaturan akun dan preferensi aplikasi.</div></div></div>
+    <div id="panel-help" class="customer-panel" hidden><div class="page-card"><div class="page-head"><button type="button" data-open-panel="home">‹</button><h2>Bantuan</h2></div><div class="customer-placeholder">Pusat bantuan MotorCare.</div></div></div>
   </div>
-  <div class="card">
-    <h3>🔔 Notifikasi Order <span id="notificationBadge" class="badge">0</span></h3>
-    <button id="enableNotifications" class="secondary">Aktifkan notifikasi HP</button>
-    <div id="notificationMsg" class="msg"></div>
-    <div id="mechanicNotifications"></div>
-  </div>
-  <div class="card"><h3>🚨 Order Masuk</h3><div id="offers"></div></div>
-  <div class="card"><h3>🛠️ Order Aktif</h3><div id="mechanicOrders"></div></div>
-</div></section>
+  <nav class="bottom-nav" aria-label="Navigasi utama">
+    <button type="button" data-open-panel="home" class="active"><span>⌂</span><small>Home</small></button>
+    <button type="button" data-open-panel="ordersPanel"><span>☷</span><small>Pesanan</small></button>
+    <button type="button" data-open-panel="notifications"><span>◌<i id="bottomNotifBadge">0</i></span><small>Notifikasi</small></button>
+    <button type="button" data-open-panel="profile"><span>◎</span><small>Profile</small></button>
+  </nav>
+</div>
+<div id="admin" hidden><div class="card"><h2>Admin • Pembayaran</h2><p class="muted">Konfirmasi pembayaran manual untuk pengujian Payment V1.</p><div id="adminPayments"></div></div><div class="card"><h2>Admin • Reset Mechanic Test</h2><p class="muted">Reset khusus akun mechanic.test@motorcare.local.</p><input id="resetMechanicPassword" type="password" minlength="8" placeholder="Password baru (min. 8 karakter)"><button id="resetMechanic">Reset password mechanic test</button><div id="resetMechanicMsg" class="msg"></div></div></div>
+<div id="mechanic" hidden>
+  <div class="card"><h2>🏍️ Mode Kerja Mekanik</h2><p class="muted">Pilih cara MotorCare mengirim order seperti alur aplikasi ojek online.</p><div class="mechanic-mode"><div><label><b>Mode order</b></label><select id="dispatchMode"><option value="nearby_only">📍 Customer Terdekat</option><option value="auto_accept">⚡ Otomatis Terima</option></select></div><div><label><b>Radius layanan</b></label><div id="mechanicRadius" class="customer-placeholder">-</div></div></div><div id="mechanicModeStatus" class="msg"></div><div class="row"><button id="online">🟢 ONLINE</button><button id="offline" class="secondary">⚪ OFFLINE</button></div><button id="gpsMechanic">📍 Perbarui lokasi saya</button><div id="gpsM" class="muted"></div></div>
+  <div class="card"><h3>🔔 Notifikasi Order <span id="notificationBadge" class="badge">0</span></h3><button id="enableNotifications" class="secondary">Aktifkan notifikasi HP</button><div id="notificationMsg" class="msg"></div><div id="mechanicNotifications"></div></div>
+  <div class="card"><h3>🚨 Order Masuk</h3><div id="offers"></div></div><div class="card"><h3>🛠️ Order Aktif</h3><div id="mechanicOrders"></div></div>
+</div>
+</section>
 </main>
 <script>
-function showCustomerPanel(name){document.querySelectorAll('.customer-panel').forEach(p=>p.hidden=p.id!=='panel-'+name);document.querySelectorAll('#customerMenu button').forEach(b=>b.classList.toggle('active',b.dataset.panel===name));if(name==='track')updateTrack();if(name==='profile')updateCustomerProfile();if(name==='payment')updatePaymentsMirror();if(name==='notifications')loadCustomerNotifications();if(name==='notifications')loadCustomerNotifications();}
+function showCustomerPanel(name){document.querySelectorAll('.customer-panel').forEach(p=>p.hidden=p.id!=='panel-'+name);document.querySelectorAll('#customerMenu button').forEach(b=>b.classList.toggle('active',b.dataset.panel===name));document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.toggle('active',b.dataset.openPanel===name));if(name==='track')updateTrack();if(name==='profile')updateCustomerProfile();if(name==='payment')updatePaymentsMirror();if(name==='notifications')loadCustomerNotifications();}
 document.querySelectorAll('#customerMenu button').forEach(b=>b.addEventListener('click',()=>showCustomerPanel(b.dataset.panel)));
-async function updateTrack(){try{const orders=Object.values(window.__mcOrders||{});const active=orders.find(o=>!['completed','cancelled'].includes(String(o.status||'').toLowerCase()));const box=document.getElementById('trackContent');if(!active){box.innerHTML='Belum ada order aktif.';return}const rows=await api('/rest/v1/rpc/customer_get_order_tracking',{method:'POST',body:JSON.stringify({p_order_id:active.id})});const t=Array.isArray(rows)?rows[0]:rows;if(!t||!t.order_id){box.innerHTML='<b>Order '+(active.order_code||'')+'</b><br>Menunggu mekanik menerima order.';return}const status=t.order_status;const steps=[['accepted','Mekanik menerima order'],['on_the_way','Mekanik menuju lokasi'],['arrived','Mekanik sudah tiba'],['in_progress','Mekanik mulai pekerjaan'],['completed','Pekerjaan selesai']];const rank={accepted:0,on_the_way:1,arrived:2,in_progress:3,completed:4};const rnk=rank[status]??-1;const esc=s=>String(s??'-').replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));const photo=t.mechanic_photo_url?'<img class="mechanic-photo" src="'+esc(t.mechanic_photo_url)+'" alt="Foto Mekanik A">':'<div class="mechanic-photo"></div>';let html='<div class="mechanic-card">'+photo+'<div><div class="pill">'+esc(t.mechanic_label||'Mekanik A')+'</div><h3 style="margin:6px 0 3px">'+esc(t.mechanic_name||'Mekanik MotorCare')+'</h3><div class="muted">Order '+esc(t.order_code)+'</div></div></div><div class="track-status">'+steps.map((s,i)=>'<div class="track-step '+(i<=rnk?'done ':'')+(i===rnk?'current':'')+'">'+(i<=rnk?'✅':'⬜')+' '+s[1]+'</div>').join('')+'</div>';if(t.mechanic_lat!=null&&t.mechanic_lng!=null){const updated=t.mechanic_location_updated_at?new Date(t.mechanic_location_updated_at).toLocaleString('id-ID'):'-';const maps='https://www.google.com/maps?q='+encodeURIComponent(t.mechanic_lat+','+t.mechanic_lng);html+='<div class="track-location"><b>📍 Lokasi Mekanik A</b><br>'+Number(t.mechanic_lat).toFixed(5)+', '+Number(t.mechanic_lng).toFixed(5)+'<br><span class="muted">Update: '+updated+'</span><br><a href="'+maps+'" target="_blank" rel="noopener">Buka lokasi di peta</a></div>'}else{html+='<div class="track-location">📍 Lokasi mekanik belum tersedia.</div>'}box.innerHTML=html}catch(e){document.getElementById('trackContent').textContent='Gagal memuat pelacakan: '+e.message}}
+document.querySelectorAll('[data-open-panel]').forEach(b=>b.addEventListener('click',()=>showCustomerPanel(b.dataset.openPanel)));
+async function updateTrack(){try{const orders=Object.values(window.__mcOrders||{});const active=orders.find(o=>!['completed','cancelled'].includes(String(o.status||'').toLowerCase()));const box=document.getElementById('trackContent');if(!active){box.innerHTML='Belum ada order aktif.';return}const rows=await api('/rest/v1/rpc/customer_get_order_tracking',{method:'POST',body:JSON.stringify({p_order_id:active.id})});const t=Array.isArray(rows)?rows[0]:rows;if(!t||!t.order_id){box.innerHTML='<b>Order '+(active.order_code||'')+'</b><br>Menunggu mekanik menerima order.';return}const status=t.order_status;const steps=[['accepted','Mekanik menerima order'],['on_the_way','Mekanik menuju lokasi'],['arrived','Mekanik sudah tiba'],['in_progress','Mekanik mulai pekerjaan'],['completed','Pekerjaan selesai']];const rank={accepted:0,on_the_way:1,arrived:2,in_progress:3,completed:4};const rnk=rank[status]??-1;const esc=s=>String(s??'-').replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));const photo=t.mechanic_photo_url?'<img class="mechanic-photo" src="'+esc(t.mechanic_photo_url)+'" alt="Foto Mekanik">':'<div class="mechanic-photo"></div>';let html='<div class="mechanic-card">'+photo+'<div><div class="pill">'+esc(t.mechanic_label||'Mekanik A')+'</div><h3>'+esc(t.mechanic_name||'Mekanik MotorCare')+'</h3><div class="muted">Order '+esc(t.order_code)+'</div></div></div><div class="track-status">'+steps.map((s,i)=>'<div class="track-step '+(i<=rnk?'done ':'')+(i===rnk?'current':'')+'">'+(i<=rnk?'✅':'⬜')+' '+s[1]+'</div>').join('')+'</div>';if(t.mechanic_lat!=null&&t.mechanic_lng!=null){const updated=t.mechanic_location_updated_at?new Date(t.mechanic_location_updated_at).toLocaleString('id-ID'):'-';const maps='https://www.google.com/maps?q='+encodeURIComponent(t.mechanic_lat+','+t.mechanic_lng);html+='<div class="track-location"><b>📍 Lokasi Mekanik</b><br>'+Number(t.mechanic_lat).toFixed(5)+', '+Number(t.mechanic_lng).toFixed(5)+'<br><span class="muted">Update: '+updated+'</span><br><a href="'+maps+'" target="_blank" rel="noopener">Buka lokasi di peta</a></div>'}else html+='<div class="track-location">📍 Lokasi mekanik belum tersedia.</div>';box.innerHTML=html}catch(e){document.getElementById('trackContent').textContent='Gagal memuat pelacakan: '+e.message}}
 function updateCustomerProfile(){const p=window.profile||null;document.getElementById('profileContent').innerHTML='<b>Akun Customer</b><br>'+((window.user&&window.user.email)||'')+'<br><span class="muted">ID: '+((window.user&&window.user.id)||'-')+'</span>'}
-function updatePaymentsMirror(){const orders=Object.values(window.__mcOrders||{});document.getElementById('paymentsMirror').innerHTML=orders.length?orders.map(o=>'<div class="item"><b>Order #'+String(o.id).slice(0,8)+'</b><br>Status pembayaran: '+(o.payment_status||'unpaid')+'<br>Rp '+Number(o.final_price??o.total_amount??0).toLocaleString('id-ID')+'</div>').join(''):'Belum ada transaksi.';}
+function updatePaymentsMirror(){const orders=Object.values(window.__mcOrders||{});document.getElementById('paymentsMirror').innerHTML=orders.length?orders.map(o=>'<div class="item"><b>Order #'+String(o.order_code||o.id).slice(0,14)+'</b><br>Status pembayaran: '+(o.payment_status||'unpaid')+'<br>Rp '+Number(o.final_price??o.total_amount??0).toLocaleString('id-ID')+'</div>').join(''):'Belum ada transaksi.';}
 </script>
-<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js?v=17",{scope:"./"}).catch(()=>{});}</script><script src="app.js?v=17"></script></body></html>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js?v=17",{scope:"./"}).catch(()=>{});}</script><script src="app.js?v=17"></script>
+</body></html>
