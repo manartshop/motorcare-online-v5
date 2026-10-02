@@ -57,3 +57,22 @@ input:focus,select:focus{outline:2px solid var(--mc-neon)!important;outline-offs
 .msg.ok{border-color:var(--mc-neon)!important;background:#efffeb!important;color:#116b08!important}
 .profile-actions{border-top-color:#222!important}
 @media(max-width:480px){html,body{background:#fff}.app{box-shadow:none}}
+
+/* MOTORCARE — STABILO GREEN + BLACK ONLY */
+.mc-topbar{background:#050505!important}
+.mc-topbar:before,.mc-topbar:after{background:rgba(57,255,20,.18)!important}
+.mc-topbar #net{background:#39ff14!important;color:#050505!important}
+.mc-more{background:#39ff14!important;color:#050505!important}
+.customer-notice{border-left-color:#39ff14!important}
+.welcome-banner{border-color:#050505!important}.welcome-banner b{color:#159b08!important}
+.tile-icon{background:#050505!important;color:#39ff14!important;border-color:#39ff14!important}
+.promo-card{background:linear-gradient(145deg,#050505 0 58%,#183d13 58% 100%)!important;border-color:#39ff14!important}
+.bottom-nav{background:#050505!important}
+.bottom-nav button.active span:first-child{color:#39ff14!important;text-shadow:0 0 8px rgba(57,255,20,.45)!important}
+.bottom-nav i{background:#39ff14!important;color:#050505!important}
+.mechanic-pin{background:#39ff14!important;color:#050505!important}
+.map-back{background:#050505!important;color:#39ff14!important;border-color:#39ff14!important}
+button,.cta{background:#39ff14!important;color:#050505!important;border-color:#39ff14!important}
+button.secondary,.logout-btn{background:#050505!important;color:#39ff14!important;border-color:#39ff14!important}
+.pill,.badge{background:#39ff14!important;color:#050505!important}
+.actions button{background:#39ff14!important;color:#050505!important}
