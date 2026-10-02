@@ -14,7 +14,7 @@
 <link rel="icon" href="icon-192.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.svg">
 <style>
-.customer-menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}.customer-menu button{min-height:58px;text-align:left;padding:10px 12px}.customer-menu .active{outline:2px solid currentColor}.customer-panel[hidden]{display:none}.customer-panel .card{margin-top:10px}.menu-icon{font-size:21px;margin-right:7px}.menu-title{font-weight:700}.menu-sub{display:block;font-size:11px;opacity:.7;margin-top:3px}.customer-placeholder{padding:14px;border-radius:12px;background:rgba(127,127,127,.08)}@media(min-width:700px){.customer-menu{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.customer-menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}.customer-menu button{min-height:58px;text-align:left;padding:10px 12px}.customer-menu .active{outline:2px solid currentColor}.customer-panel[hidden]{display:none}.customer-panel .card{margin-top:10px}.menu-icon{font-size:21px;margin-right:7px}.menu-title{font-weight:700}.menu-sub{display:block;font-size:11px;opacity:.7;margin-top:3px}.customer-placeholder{padding:14px;border-radius:12px;background:rgba(127,127,127,.08)}.mechanic-mode{display:grid;grid-template-columns:1fr 1fr;gap:10px}.mechanic-mode select{width:100%}.incoming-order{border:2px solid currentColor;animation:mcPulse 1.4s infinite}.notification-new{border-left:4px solid currentColor}@keyframes mcPulse{50%{transform:scale(1.01)}}.badge{display:inline-block;min-width:22px;padding:3px 7px;border-radius:999px;background:#d22;color:#fff;text-align:center;font-size:12px}@media(min-width:700px){.customer-menu{grid-template-columns:repeat(3,minmax(0,1fr))}}
 </style>
 </head>
 <body><main class="app"><header><div><div class="brand">MotorCare Online</div><div class="sub">Bantuan motor di jalan</div></div><span id="net" class="pill">OFFLINE</span></header>
@@ -49,7 +49,28 @@
   </div>
 </div>
 <div id="admin" hidden><div class="card"><h2>Admin • Pembayaran</h2><p class="muted">Konfirmasi pembayaran manual untuk pengujian Payment V1.</p><div id="adminPayments"></div></div><div class="card"><h2>Admin • Reset Mechanic Test</h2><p class="muted">Reset khusus akun mechanic.test@motorcare.local. Hanya admin aktif yang dapat menjalankan.</p><input id="resetMechanicPassword" type="password" minlength="8" placeholder="Password baru (min. 8 karakter)"><button id="resetMechanic">Reset password mechanic test</button><div id="resetMechanicMsg" class="msg"></div></div></div>
-<div id="mechanic" hidden><div class="card"><h2>Status mekanik</h2><div class="row"><button id="online">ONLINE</button><button id="offline" class="secondary">OFFLINE</button></div><button id="gpsMechanic">Kirim lokasi GPS</button><div id="gpsM" class="muted"></div></div><div class="card"><h3>Tawaran masuk</h3><div id="offers"></div></div><div class="card"><h3>Order aktif</h3><div id="mechanicOrders"></div></div></div></section>
+<div id="mechanic" hidden>
+  <div class="card">
+    <h2>🏍️ Mode Kerja Mekanik</h2>
+    <p class="muted">Pilih cara MotorCare mengirim order seperti alur aplikasi ojek online.</p>
+    <div class="mechanic-mode">
+      <div><label><b>Mode order</b></label><select id="dispatchMode"><option value="nearby_only">📍 Customer Terdekat</option><option value="auto_accept">⚡ Otomatis Terima</option></select></div>
+      <div><label><b>Radius layanan</b></label><div id="mechanicRadius" class="customer-placeholder">-</div></div>
+    </div>
+    <div id="mechanicModeStatus" class="msg"></div>
+    <div class="row"><button id="online">🟢 ONLINE</button><button id="offline" class="secondary">⚪ OFFLINE</button></div>
+    <button id="gpsMechanic">📍 Perbarui lokasi saya</button>
+    <div id="gpsM" class="muted"></div>
+  </div>
+  <div class="card">
+    <h3>🔔 Notifikasi Order <span id="notificationBadge" class="badge">0</span></h3>
+    <button id="enableNotifications" class="secondary">Aktifkan notifikasi HP</button>
+    <div id="notificationMsg" class="msg"></div>
+    <div id="mechanicNotifications"></div>
+  </div>
+  <div class="card"><h3>🚨 Order Masuk</h3><div id="offers"></div></div>
+  <div class="card"><h3>🛠️ Order Aktif</h3><div id="mechanicOrders"></div></div>
+</div></section>
 </main>
 <script>
 function showCustomerPanel(name){document.querySelectorAll('.customer-panel').forEach(p=>p.hidden=p.id!=='panel-'+name);document.querySelectorAll('#customerMenu button').forEach(b=>b.classList.toggle('active',b.dataset.panel===name));if(name==='track')updateTrack();if(name==='profile')updateCustomerProfile();if(name==='payment')updatePaymentsMirror();}
