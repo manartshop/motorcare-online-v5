@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="application-name" content="MotorCare Online">
 <title>MotorCare Online</title>
-<link rel="stylesheet" href="styles.css?v=21">
+<link rel="stylesheet" href="styles.css?v=22">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.svg">
@@ -30,9 +30,6 @@
 <section id="dashboard" hidden>
 <div class="card welcome"><div><div class="muted">Akun</div><strong id="who"></strong><span id="role" class="pill"></span></div><button id="logout" class="secondary small">Keluar</button></div>
 <div id="customer" hidden>
-  <div class="customer-menu" id="customerMenu" aria-hidden="true">
-    <button data-panel="home" class="active">Home</button><button data-panel="service">Servis</button><button data-panel="ordersPanel">Pesanan</button><button data-panel="track">Lacak</button><button data-panel="chat">Chat</button><button data-panel="payment">Bayar</button><button data-panel="history">Riwayat</button><button data-panel="profile">Profile</button><button data-panel="notifications">Notifikasi</button><button data-panel="settings">Pengaturan</button><button data-panel="help">Bantuan</button>
-  </div>
   <div id="customerNotice" class="customer-notice" hidden></div>
   <div id="customerPanels">
     <div id="panel-home" class="customer-panel">
@@ -69,12 +66,6 @@
     <div id="panel-settings" class="customer-panel" hidden><div class="page-card"><div class="page-head"><button type="button" data-open-panel="home">‹</button><h2>Pengaturan</h2></div><div class="customer-placeholder">Pengaturan akun dan preferensi aplikasi.</div></div></div>
     <div id="panel-help" class="customer-panel" hidden><div class="page-card"><div class="page-head"><button type="button" data-open-panel="home">‹</button><h2>Bantuan</h2></div><div class="customer-placeholder">Pusat bantuan MotorCare.</div></div></div>
   </div>
-  <nav class="bottom-nav" aria-label="Navigasi utama">
-    <button type="button" data-open-panel="home" class="active"><span>⌂</span><small>Home</small></button>
-    <button type="button" data-open-panel="ordersPanel"><span>☷</span><small>Pesanan</small></button>
-    <button type="button" data-open-panel="notifications"><span>◌<i id="bottomNotifBadge">0</i></span><small>Notifikasi</small></button>
-    <button type="button" data-open-panel="profile"><span>◎</span><small>Profile</small></button>
-  </nav>
 </div>
 <div id="admin" hidden><div class="card"><h2>Admin • Pembayaran</h2><p class="muted">Konfirmasi pembayaran manual untuk pengujian Payment V1.</p><div id="adminPayments"></div></div><div class="card"><h2>Admin • Reset Mechanic Test</h2><p class="muted">Reset khusus akun mechanic.test@motorcare.local.</p><input id="resetMechanicPassword" type="password" minlength="8" placeholder="Password baru (min. 8 karakter)"><button id="resetMechanic">Reset password mechanic test</button><div id="resetMechanicMsg" class="msg"></div></div></div>
 <div id="mechanic" hidden>
@@ -86,10 +77,9 @@
 </main>
 <script>
 function showCustomerPanel(name){document.querySelectorAll('.customer-panel').forEach(p=>p.hidden=p.id!=='panel-'+name);document.querySelectorAll('#customerMenu button').forEach(b=>b.classList.toggle('active',b.dataset.panel===name));document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.toggle('active',b.dataset.openPanel===name));if(name==='track')updateTrack();if(name==='profile')updateCustomerProfile();if(name==='payment')updatePaymentsMirror();if(name==='notifications')loadCustomerNotifications();}
-document.querySelectorAll('#customerMenu button').forEach(b=>b.addEventListener('click',()=>showCustomerPanel(b.dataset.panel)));
 document.querySelectorAll('[data-open-panel]').forEach(b=>b.addEventListener('click',()=>showCustomerPanel(b.dataset.openPanel)));
 async function updateTrack(){try{const orders=Object.values(window.__mcOrders||{});const active=orders.find(o=>!['completed','cancelled'].includes(String(o.status||'').toLowerCase()));const box=document.getElementById('trackContent');if(!active){box.innerHTML='Belum ada order aktif.';return}const rows=await api('/rest/v1/rpc/customer_get_order_tracking',{method:'POST',body:JSON.stringify({p_order_id:active.id})});const t=Array.isArray(rows)?rows[0]:rows;if(!t||!t.order_id){box.innerHTML='<b>Order '+(active.order_code||'')+'</b><br>Menunggu mekanik menerima order.';return}const status=t.order_status;const steps=[['accepted','Mekanik menerima order'],['on_the_way','Mekanik menuju lokasi'],['arrived','Mekanik sudah tiba'],['in_progress','Mekanik mulai pekerjaan'],['completed','Pekerjaan selesai']];const rank={accepted:0,on_the_way:1,arrived:2,in_progress:3,completed:4};const rnk=rank[status]??-1;const esc=s=>String(s??'-').replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));const photo=t.mechanic_photo_url?'<img class="mechanic-photo" src="'+esc(t.mechanic_photo_url)+'" alt="Foto Mekanik">':'<div class="mechanic-photo"></div>';let html='<div class="mechanic-card">'+photo+'<div><div class="pill">'+esc(t.mechanic_label||'Mekanik A')+'</div><h3>'+esc(t.mechanic_name||'Mekanik MotorCare')+'</h3><div class="muted">Order '+esc(t.order_code)+'</div></div></div><div class="track-status">'+steps.map((s,i)=>'<div class="track-step '+(i<=rnk?'done ':'')+(i===rnk?'current':'')+'">'+(i<=rnk?'✅':'⬜')+' '+s[1]+'</div>').join('')+'</div>';if(t.mechanic_lat!=null&&t.mechanic_lng!=null){const updated=t.mechanic_location_updated_at?new Date(t.mechanic_location_updated_at).toLocaleString('id-ID'):'-';const maps='https://www.google.com/maps?q='+encodeURIComponent(t.mechanic_lat+','+t.mechanic_lng);html+='<div class="track-location"><b>📍 Lokasi Mekanik</b><br>'+Number(t.mechanic_lat).toFixed(5)+', '+Number(t.mechanic_lng).toFixed(5)+'<br><span class="muted">Update: '+updated+'</span><br><a href="'+maps+'" target="_blank" rel="noopener">Buka lokasi di peta</a></div>'}else html+='<div class="track-location">📍 Lokasi mekanik belum tersedia.</div>';box.innerHTML=html}catch(e){document.getElementById('trackContent').textContent='Gagal memuat pelacakan: '+e.message}}
 function updateCustomerProfile(){const p=window.profile||null;document.getElementById('profileContent').innerHTML='<b>Akun Customer</b><br>'+((window.user&&window.user.email)||'')+'<br><span class="muted">ID: '+((window.user&&window.user.id)||'-')+'</span>'}
 function updatePaymentsMirror(){const orders=Object.values(window.__mcOrders||{});document.getElementById('paymentsMirror').innerHTML=orders.length?orders.map(o=>'<div class="item"><b>Order #'+String(o.order_code||o.id).slice(0,14)+'</b><br>Status pembayaran: '+(o.payment_status||'unpaid')+'<br>Rp '+Number(o.final_price??o.total_amount??0).toLocaleString('id-ID')+'</div>').join(''):'Belum ada transaksi.';}
-<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js?v=19",{scope:"./"}).catch(()=>{});}</script><script src="app.js?v=19"></script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js?v=20",{scope:"./"}).catch(()=>{});}</script><script src="app.js?v=20"></script>
 </body></html>
