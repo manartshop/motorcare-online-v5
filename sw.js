@@ -1,5 +1,5 @@
-const CACHE="motorcare-v5-18";
-const ASSETS=["./","./index.html","./app.js?v=18","./styles.css?v=19","./manifest.webmanifest","./icon-192.svg","./icon-512.svg"];
+const CACHE="motorcare-v5-19";
+const ASSETS=["./","./index.html","./app.js?v=19","./styles.css?v=20","./manifest.webmanifest","./icon-192.svg","./icon-512.svg"];
 self.addEventListener("install",e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener("activate",e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener("fetch",e=>{if(e.request.method!=="GET")return;const u=new URL(e.request.url);if(u.origin!==location.origin)return;if(u.pathname.endsWith("/app.js")||u.pathname.endsWith("/index.html")||u.pathname.endsWith("/sw.js")||u.pathname.endsWith("/manifest.webmanifest")){e.respondWith(fetch(e.request,{cache:"no-store"}).catch(()=>caches.match(e.request).then(r=>r||caches.match(new Request(e.request.url.split("?")[0])))));return}e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(x=>{const c=x.clone();caches.open(CACHE).then(k=>k.put(e.request,c));return x})))});
