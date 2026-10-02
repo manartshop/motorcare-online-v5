@@ -34,7 +34,7 @@
     <button data-panel="settings"><span class="menu-icon">⚙️</span><span class="menu-title">Pengaturan</span><span class="menu-sub">Preferensi aplikasi</span></button>
     <button data-panel="help"><span class="menu-icon">📞</span><span class="menu-title">Bantuan</span><span class="menu-sub">Hubungi MotorCare</span></button>
   </div></div>
-  <div id="customerPanels">
+  <div id="customerNotice" class="card notification-new" hidden></div><div id="customerPanels">
     <div id="panel-home" class="customer-panel"><div class="card"><h2>🏠 Beranda</h2><p class="muted">Selamat datang di MotorCare Online. Pilih menu untuk melanjutkan.</p><div class="customer-placeholder">Gunakan <b>Pesan Servis</b> untuk mencari mekanik atau <b>Pesanan Saya</b> untuk melihat order Anda.</div></div></div>
     <div id="panel-service" class="customer-panel" hidden><div class="card"><h2>🔧 Pesan Servis</h2><select id="service"><option value="">Memuat layanan…</option></select><input id="problem" placeholder="Keluhan motor (contoh: ban bocor)"><button id="gpsCustomer">Ambil lokasi saya</button><div id="gpsC" class="muted"></div><button id="order">Cari mekanik sekarang</button><div id="orderMsg" class="msg"></div></div></div>
     <div id="panel-ordersPanel" class="customer-panel" hidden><div class="card"><h2>📋 Pesanan Saya</h2><div id="orders"></div></div></div>
@@ -79,4 +79,4 @@ async function updateTrack(){try{const orders=Object.values(window.__mcOrders||{
 function updateCustomerProfile(){const p=window.profile||null;document.getElementById('profileContent').innerHTML='<b>Akun Customer</b><br>'+((window.user&&window.user.email)||'')+'<br><span class="muted">ID: '+((window.user&&window.user.id)||'-')+'</span>'}
 function updatePaymentsMirror(){const orders=Object.values(window.__mcOrders||{});document.getElementById('paymentsMirror').innerHTML=orders.length?orders.map(o=>'<div class="item"><b>Order #'+String(o.id).slice(0,8)+'</b><br>Status pembayaran: '+(o.payment_status||'unpaid')+'<br>Rp '+Number(o.final_price??o.total_amount??0).toLocaleString('id-ID')+'</div>').join(''):'Belum ada transaksi.';}
 </script>
-<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js?v=16",{scope:"./"}).catch(()=>{});}</script><script src="app.js?v=16"></script></body></html>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js?v=17",{scope:"./"}).catch(()=>{});}</script><script src="app.js?v=17"></script></body></html>
